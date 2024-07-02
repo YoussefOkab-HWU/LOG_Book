@@ -1,0 +1,56 @@
+Route::prefix('odata')->group(function () {
+    Route::middleware(['catchAndFormatExceptions'])->group(function () {
+        Route::prefix('v1')->group(function () {
+            Route::get('/$metadata',CTR_CLASSPATH .'\RecordController@getMetadata');
+            Route::get('/$openApi',CTR_CLASSPATH .'\RecordController@getOpenApi');
+
+            Route::post('/login',CTR_CLASSPATH .'\ActionController@login');
+            Route::post('/register',CTR_CLASSPATH .'\ActionController@register');
+            Route::post('/resetPassword',CTR_CLASSPATH .'\ActionController@resetPassword');
+            Route::post('/changePasswordAfterReset',CTR_CLASSPATH .'\ActionController@changePasswordAfterReset');
+            Route::post('/confirmEmail',CTR_CLASSPATH .'\ActionController@confirmEmail');
+            Route::post('/renewToken',CTR_CLASSPATH .'\ActionController@renewToken');
+
+            Route::get('/status',CTR_CLASSPATH .'\RecordController@systemStatus');
+            Route::post('/retrieveWhatsappMessage',CTR_CLASSPATH .'\ActionController@retrieveWhatsappMessage');
+            Route::post('/statusWhatsappMessage',CTR_CLASSPATH .'\ActionController@statusWhatsappMessage');
+            Route::post('/logFailedWhatsappMessage',CTR_CLASSPATH .'\ActionController@logFailedWhatsappMessage');
+
+            Route::post('/logEmail',CTR_CLASSPATH .'\ActionController@logEmail');
+
+            Route::middleware(['odataPassKeys'])->group(function ()  {
+                Route::post('/receiveMetricData',CTR_CLASSPATH .'\ActionController@receiveMetricData');
+                Route::post('/receiveMultiMetricData',CTR_CLASSPATH .'\ActionController@receiveMultiMetricData');
+                Route::post('/receiveMetricObjectData',CTR_CLASSPATH .'\ActionController@receiveMetricObjectData');
+                Route::post('/receiveQondorData',CTR_CLASSPATH .'\ActionController@receiveQondorData');
+//                Route::post('/receiveQondorData',[ActionController::class, 'receiveQondorData']);
+
+                Route::post('/save_purchase_order',CTR_CLASSPATH .'\ActionController@savePurchaseOrder');
+                Route::post('/save_company',CTR_CLASSPATH .'\ActionController@saveCompany');
+
+                Route::get('/gt_translation',CTR_CLASSPATH .'\RecordController@getTranslation');
+                Route::get('/gt_purchase_order',CTR_CLASSPATH .'\RecordController@getPurchaseOrder');
+
+                Route::post('/soilDataAnalysis',CTR_CLASSPATH .'\ActionController@postSoilDataAnalysis');
+
+
+            });
+
+            Route::middleware(['odataPassContext'])->group(function ()  {
+                Route::post('/document',CTR_CLASSPATH .'\RecordController@postDocument');
+                // Change current user password
+                Route::patch('/changePassword',CTR_CLASSPATH .'\ActionController@changePassword');
+
+                // Purchase order Ducuments Upload
+                Route::resource('/po_documents', CTR_CLASSPATH .'\PoDocumentController');
+
+                Route::get('/{path}',CTR_CLASSPATH .'\RecordController@handleGet')->where('path', '.*');
+                Route::post('/{path}',CTR_CLASSPATH .'\RecordController@handlePost')->where('path', '.*');
+                Route::patch('/{path}',CTR_CLASSPATH .'\RecordController@handlePatch')->where('path', '.*');
+                Route::delete('/{path}',CTR_CLASSPATH .'\RecordController@handleDelete')->where('path', '.*');
+
+            });
+
+        });
+    });
+});

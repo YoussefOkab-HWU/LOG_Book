@@ -1,0 +1,13 @@
+ public function postDocument(Request $request){
+
+        $this->handlePost($request,path:'document');
+        $getContent = $request->getContent();
+
+        $input = json_decode($getContent, true);
+        $context = new Context(2);
+
+
+        return MayaActions:: postDocument($input,$context)->toResponse();
+
+    }
+}

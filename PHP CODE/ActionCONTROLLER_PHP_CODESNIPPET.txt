@@ -1,0 +1,11 @@
+  public function postSoilDataAnalysis(Request $request)
+    {
+        $idsite = $request->header("idsite");
+        $idgroup = $request->header("idgroup");
+        $depth = $request->header("depth");
+
+
+        $input = json_decode($request->getContent(), true);
+        $context = new Context(2);
+        return MayaActions::postSoilDataAnalysis($input,$idsite,$idgroup,$depth,$context)->toResponse();
+    }

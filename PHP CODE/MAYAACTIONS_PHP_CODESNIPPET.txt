@@ -1,0 +1,261 @@
+public static function postSoilDataAnalysis($input, $request, $idgroup, $idsite)
+    {
+
+        $date = $input['Date'];
+        $iddocument = $input['iddocument'];
+
+        // Array to store substances and other data across analysis numbers
+        $dataByAnalysis = [];
+
+        // Iterate through the data array
+        foreach ($input['data'] as $data) {
+
+            $analysis_number = $data['analysis_number'];
+
+
+            // Initialize data array for the current analysis number if not exists
+            if (!isset($dataByAnalysis[$analysis_number])) {
+                $dataByAnalysis[$analysis_number] = [
+                    'Date' => $date,
+                    'iddocument' => $iddocument,
+                    'name' => $data['name'],
+                    'analysis_date' => $data['analysis_date'],
+                    'page_number' => $data['page_number'],
+                ];
+            }
+
+            // Loop through substances
+            foreach ($data['substances'] as $substance) {
+
+                $substance_name = $substance['substance_name'];
+
+                $value = $substance['value'];
+                if ($value == null){
+                    $value = 0;
+                }
+                $depth = $substance['depth'];
+                if ($depth == "N/A") {
+                    $depth = null;
+                }
+                elseif ($depth == "N/A")
+                foreach ($dataByAnalysis as $other_analysis_number => $other_analysis_data) {
+                    // Check if the current analysis number was already mentioned
+
+                    if ($other_analysis_number == $analysis_number) {
+
+                        if (isset($other_analysis_data['substances'][$substance_name])) {
+
+                            $other_value = $other_analysis_data['substances'][$substance_name];
+
+                            // Check if the other analysis has the same substansce
+
+                            // Compare values and replace 'N/A' if necessary
+                            if ($value === 'N/A' && $other_value !== 'N/A') {
+                                $value = $other_value;
+
+
+                            } elseif ($value === 'N/A' && $other_value === 'N/A') {
+                                // If both are 'N/A', leave it as 'N/A'
+                                $value = $value;
+                            } elseif ($value !== 'N/A' && $other_value === 'N/A') {
+                                $value = $value;
+                            }
+                        }
+
+                    }
+                }
+
+                // Store substance data
+                $dataByAnalysis[$analysis_number]['substances'][$substance_name] = $value;
+
+
+            }
+
+        }
+        $idsite = '4cdef00e-7b13-1f90-ba99-abe638a0d494';
+        $idgroup = '45d5596e-499b-eb27-a070-f7820b382e20';
+
+        foreach ($dataByAnalysis as $analysis_number => $analysisData) {
+            foreach ($analysisData['substances'] as $substance_name => $value) {
+                if ($value !== 'N/A') {
+
+                    $matchingSubstance = DB::table('substance')
+                        ->where('name', $substance_name)
+                        ->selectRaw('BIN_TO_UUID(idsubstance) as idsubstance')
+                        ->first();
+                    if ($analysisData['analysis_date'] !=='N/A') {
+                        if ($matchingSubstance) {
+                            $foundTrackerID = true;
+                            $idsubstance = $matchingSubstance->idsubstance;
+
+                            $idsoil_substance = Guid::generateGuid(false);
+                            $idsoil_analysis = Guid::generateGuid(false);
+                            DB::table('soil_substance')
+                                ->insert([
+                                    'idsoil_substance' => DB::raw("UUID_TO_BIN('$idsoil_substance')"),
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'quantity' => $value,
+
+                                ]);
+                            DB::table('soil_analysis')
+                                ->insert([
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'name' => $analysisData['name'],
+                                    'iddocument' => DB::raw("UUID_TO_BIN('$iddocument')"),
+                                    'idsite' => DB::raw("UUID_TO_BIN('$idsite')"),
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+                                    'depth' => $depth,
+                                    'createdon' => $analysisData['analysis_date'] . ' 00:00:00',
+                                ]);
+                        } else {
+                            // If no trackerID found, insert new device_qondor
+                            $idsubstance = Guid::generateGuid(false);
+                            DB::table('substance')
+                                ->insert([
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'name' => $substance_name,
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+
+                                ]);
+
+                            $idsoil_substance = Guid::generateGuid(false);
+                            $idsoil_analysis = Guid::generateGuid(false);
+                            DB::table('soil_substance')
+                                ->insert([
+                                    'idsoil_substance' => DB::raw("UUID_TO_BIN('$idsoil_substance')"),
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'quantity' => $value,
+
+
+                                ]);
+                            DB::table('soil_analysis')
+                                ->insert([
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'name' => $analysisData['name'],
+                                    'iddocument' => DB::raw("UUID_TO_BIN('$iddocument')"),
+                                    'idsite' => DB::raw("UUID_TO_BIN('$idsite')"),
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+                                    'depth' => $depth,
+                                    'createdon' => $analysisData['analysis_date'] . ' 00:00:00',
+
+                                ]);
+
+                        }
+                    }elseif($analysisData['analysis_date'] == 'N/A'){
+                        if ($matchingSubstance) {
+                            $foundTrackerID = true;
+                            $idsubstance = $matchingSubstance->idsubstance;
+                            //$idmachine = $matchingSubstance->idmachine;
+                            $idsoil_substance = Guid::generateGuid(false);
+                            $idsoil_analysis = Guid::generateGuid(false);
+                            DB::table('soil_substance')
+                                ->insert([
+                                    'idsoil_substance' => DB::raw("UUID_TO_BIN('$idsoil_substance')"),
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'quantity' => $value,
+
+                                ]);
+                            DB::table('soil_analysis')
+                                ->insert([
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'name' => $analysisData['name'],
+                                    'iddocument' => DB::raw("UUID_TO_BIN('$iddocument')"),
+                                    'idsite' => DB::raw("UUID_TO_BIN('$idsite')"),
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+                                    'depth' => $depth,
+
+                                ]);
+                        } else {
+                            // If no trackerID found, insert new device_qondor
+                            $idsubstance = Guid::generateGuid(false);
+                            DB::table('substance')
+                                ->insert([
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'name' => $substance_name,
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+
+                                ]);
+
+                            $idsoil_substance = Guid::generateGuid(false);
+                            $idsoil_analysis = Guid::generateGuid(false);
+                            DB::table('soil_substance')
+                                ->insert([
+                                    'idsoil_substance' => DB::raw("UUID_TO_BIN('$idsoil_substance')"),
+                                    'idsubstance' => DB::raw("UUID_TO_BIN('$idsubstance')"),
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'quantity' => $value,
+
+
+                                ]);
+                            DB::table('soil_analysis')
+                                ->insert([
+                                    'idsoil_analysis' => DB::raw("UUID_TO_BIN('$idsoil_analysis')"),
+                                    'name' => $analysisData['name'],
+                                    'iddocument' => DB::raw("UUID_TO_BIN('$iddocument')"),
+                                    'idsite' => DB::raw("UUID_TO_BIN('$idsite')"),
+                                    'idgroup' => DB::raw("UUID_TO_BIN('$idgroup')"),
+                                    'depth' => $depth,
+
+
+                                ]);
+
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return new ActionResponse(0, 200, $dataByAnalysis);
+    }
+
+    public static function postDocument($input, $context)
+    {
+
+
+
+        $name = $input['name'];
+        $type = $input['type'];
+
+
+        $iddocument = DB::table('document')
+            ->where('name', $name)
+            ->orderBy('createdon', 'desc') // Order by createdon column in descending order
+            ->selectRaw('BIN_TO_UUID(iddocument) as iddocument')
+            ->value('iddocument');
+
+        if ($type !== 'soil_analysis_excel') {
+
+            $urlacquired = DB::table('document')
+                ->select('*', DB::raw('BIN_TO_UUID(iddocument) AS uuid'))
+                ->whereRaw('BIN_TO_UUID(iddocument) = ?', [$iddocument])
+                ->get();
+
+        }
+        if ($urlacquired->isNotEmpty()) {
+            foreach ($urlacquired as $document) {
+                $url = $document->storage;
+                $wsl_localhost = '//wsl.localhost/Ubuntu-20.04';
+                $destinationDirectory = $wsl_localhost . '/' . '/home/youssefokab/catkin_ws/src/yolov7/pdf_file';
+                $fileName = $iddocument. '.' . 'pdf';
+                $destinationPath = $destinationDirectory . '/' . $fileName;
+                // Download the file
+                if (copy($url, $destinationPath)) {
+                    echo "File downloaded successfully.";
+                } else {
+                    echo "Failed to download the file.";
+                }
+
+
+
+
+        }
+
+        }
+        return new ActionResponse(0, 200, [$destinationPath]);
+    }
+

@@ -1,0 +1,315 @@
+ "postSoilDataAnalysis" => [
+                "fullNamespace" => "App\Utilities\OData\Actions\MayaActions",
+                "functionName" => "postSoilDataAnalysis",
+                "returnType" => 0,
+                "returnSchema" => [],
+                "parameters" => [
+                    'global' => [
+                        "types" => [
+                            "TranslationRequestDataObject" => [
+                                "type" => "object",
+                                "attributes" => [
+                                    "translate_key" => [
+                                        "type" => "Edm.String",
+                                        "Nullable" => "false",
+                                    ]
+                                ]
+                            ],
+                            "MetricRequestDataObject" => [
+                                "type" => "object",
+                                "attributes" => [
+                                    "code" => [
+                                        "type" => "Edm.String",
+                                        "Nullable" => "false",
+                                    ],
+                                    "value" => [
+                                        "type" => "Edm.String",
+                                        "Nullable" => "false",
+                                    ],
+                                ]
+                            ],
+                            "GDDResponseObject" => [
+                                "type" => "object",
+                                "Nullable" => "false",
+                                "attributes" => [
+                                    "entities" => [
+                                        "type" => "array",
+                                        "Nullable" => "true",
+                                        "elements" => [
+                                            "type" => "gddData",
+                                            "Nullable" => "true"
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            "SoilAnalysisHeaderObject" => [
+                                [
+                                    "name" => "Date",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "iddocument",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                            ],
+                            "SoilAnalysisDataObject" => [
+
+                                [
+                                    "name" => "name",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sample_marked",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "analysis_date",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "analysis_number",
+                                    "type" => "Edm.Int32",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "page_number",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                            ],
+                            "SoilAnalysisSubstanceObject" => [
+                                [
+                                    "name" => "phosphorus",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Potassium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Magnesium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Sodium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Aluminium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Calcium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "PH at KCL",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Humus",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Manganese",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Iron",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Azote",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Azote",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Azote",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Nitrogen",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "boron",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sulfer",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Carbone",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Azote",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Carbone/Azote",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "chlorure de sodium",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "conductivite",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Capacite d echange cationque",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Nt",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "ph acetate",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Taux d argile",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "CEC (cmol/kg)",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "report C/N",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Repport K/Mg",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Repport K/Mg",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "PH result",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "hardness total",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "PO4",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "SO4",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+
+                                [
+                                    "name" => "Chlorine",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables de 50 a 100 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables de 100 a 200 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables de 200 a 500 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables de 500 a 1000 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables de 1000 a 2000 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "sables larger than 2000 micro",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Salt concentration",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Phossoul",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Copper",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+                                    "name" => "Zinc",
+                                    "type" => "Edm.String",
+                                    "Nullable" => true
+                                ],
+                                [
+
+                                ]
+                            ],
+                        ]
+                    ],
+                    "requireAuth" => false
+                ]
+            ],
